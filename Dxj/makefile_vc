@@ -1,0 +1,31 @@
+# Make file for Scintilla and Dxj, Windows Visual C++ version
+# Copyright 1998-1999 by Neil Hodgson <neilh@hare.net.au>
+# The License.txt file describes the conditions under which this software may be distributed.
+# This makefile is for using Visual C++ and nmake. 
+# The main makefile uses mingw32 egcs and may be more current than this file.
+
+CC      = cl
+PROG	= Dxj.EXE
+
+LDFLAGS = KERNEL32.lib USER32.lib GDI32.lib COMDLG32.lib WINMM.lib COMCTL32.lib ADVAPI32.lib
+CPPFLAGS = /TP /MD /Ox 
+
+OBJS	= Dxj.obj Scintilla.obj Document.obj CallTip.obj PlatWin.obj
+
+ALL:	$(PROG)
+
+Dxj.obj: Dxj.cpp
+	cl $(CPPFLAGS) /D STATIC_BUILD /c $*.cpp /FoDxj.obj
+Scintilla.obj: Scintilla.cc
+	cl $(CPPFLAGS) /D STATIC_BUILD /c Scintilla.cc /FoScintilla.obj
+Document.obj: Document.cc
+	cl $(CPPFLAGS) /c Document.cc
+CallTip.obj: CallTip.cc
+	cl $(CPPFLAGS) /c CallTip.cc
+PlatWin.obj: PlatWin.cc
+	cl $(CPPFLAGS) /c PlatWin.cc
+$(PROG): $(OBJS) Dxj.res
+	$(CC) -o $(PROG) $(OBJS) Dxj.res $(LDFLAGS)
+
+Dxj.res:	Dxj.rc
+	rc Dxj.rc
